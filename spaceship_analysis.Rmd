@@ -1,0 +1,155 @@
+---
+title: "Spaceship Titanic Analysis"
+output: html_notebook
+---
+
+```{r}
+train <- read_csv('/Users/seanbunk/Documents/CodingTemple/R/csv/spaceship-titaniccsv/train.csv')
+View(train)
+```
+
+```{r}
+train %>%
+  count(Transported)
+
+# 4378 have been transported
+```
+
+```{r}
+sapply(X = train, FUN = function(x) sum(is.na(x)))
+
+#calculate missing values
+```
+
+```{r}
+train$count_na <- rowSums(is.na(train))
+train %>%
+  arrange(desc(count_na))
+# checking out the missing values
+```
+
+```{r}
+age_plot <- ggplot(data = train, aes(x = Age, fill = Age)) +
+  geom_bar(color = 'blue') +
+  labs(title = "Age Distribution", x = 'Age', y = 'Count') +
+  scale_fill_brewer(palette = "Set1")
+age_plot
+```
+
+```{r}
+VR_plot <- train %>%
+  ggplot() +
+  geom_histogram(aes(VRDeck))
+VR_plot
+```
+
+```{r}
+spa_plot <- train %>%
+  ggplot() +
+  geom_histogram(aes(Spa))
+spa_plot
+```
+
+```{r}
+ShoppingMall_plot <- train %>%
+  ggplot() +
+  geom_histogram(aes(ShoppingMall))
+ShoppingMall_plot
+
+```
+
+```{r}
+FoodCourt_plot <- train %>%
+  ggplot() +
+  geom_histogram(aes(FoodCourt))
+FoodCourt_plot
+```
+
+```{r}
+RoomService_plot <- train %>%
+  ggplot() +
+  geom_histogram(aes(RoomService))
+RoomService_plot
+```
+
+```{r}
+VR_plot <- train %>%
+  ggplot() +
+  geom_histogram(aes(VRDeck))
+
+spa_plot <- train %>%
+  ggplot() +
+  geom_histogram(aes(Spa))
+
+ShoppingMall_plot <- train %>%
+  ggplot() +
+  geom_histogram(aes(ShoppingMall))
+
+FoodCourt_plot <- train %>%
+  ggplot() +
+  geom_histogram(aes(FoodCourt))
+
+RoomService_plot <- train %>%
+  ggplot() +
+  geom_histogram(aes(RoomService))
+
+grid.arrange(VR_plot, spa_plot, ShoppingMall_plot, FoodCourt_plot, RoomService_plot)
+```
+
+```{r}
+my_colors <- c("purple", "blue", "green")
+cryo_plot <- ggplot(train, aes(x = CryoSleep, fill = CryoSleep)) +
+             geom_bar() +
+             scale_fill_manual(values = my_colors)
+cryo_plot
+
+# More than half of the people are in CryoSleep
+```
+
+```{r}
+seans_colors <- c("aquamarine1", "blue3", "cadetblue4", "black")
+planet_plot <- ggplot(train, aes(x = HomePlanet, fill = HomePlanet)) +
+  geom_bar() +
+  scale_fill_manual(values = seans_colors)
+planet_plot
+```
+
+```{r}
+# most of the people came from earth.
+
+train %>%
+  count(Cabin, sort = TRUE)
+```
+
+```{r}
+# Lets see how many VIP we have
+
+my_colors2 <- c('darkgreen', 'lightblue', 'gray')
+vip_plot <- ggplot(train, aes(x = VIP, fill = VIP)) +
+  geom_bar() +
+  scale_fill_manual(values = my_colors2)
+
+vip_plot
+# The majority of the people are not in VIP
+```
+
+```{r}
+CrossTable(train$HomePlanet, train$Transported)
+#Earth = 42%
+#Europa = 66%
+#Mars = 52%
+# Europa has the higest amount transported by percentage
+```
+
+```{r}
+CrossTable(train$CryoSleep, train$Transported)
+
+# Those who were in CryoSleep have a higher Transported rate.
+```
+
+```{r}
+CrossTable(train$VIP, train$Transported)
+
+# VIP were not the most transported
+# Non VIP and those who were in CryoSleep have been transported the most.
+```
